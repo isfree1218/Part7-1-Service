@@ -20,13 +20,12 @@ public class MainActivity extends AppCompatActivity {
     ServiceConnection conn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            musicService = null;
+            musicService = ((MusicService.MusicServiceBinder) service).getService();
         }
 
-        // Service Binder 객체
         @Override
-        public void onServiceDisconnected(ComponentName name, IBinder service) {
-            musicService = ((MusicService.MusicServiceBinder) service).getService();
+        public void onServiceDisconnected(ComponentName name) {
+            musicService = null;
         }
     };
 
@@ -45,25 +44,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent service = new Intent(MainActivity.this, MusicService.class);
                 startService(service);
+                // 연동할 서비스 객체와 bind
                 bindService(service, conn, BIND_AUTO_CREATE);
             }
         });
         musicPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // bind된 Service 객체 함수 실행
+                musicService.play();
             }
         });
         musicPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                musicService.pause();
             }
         });
         musicStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent service = new Intent(MainActivity.this, MusicService.class);
+                unbindService(conn);
+                stopService(service);
             }
         });
     }

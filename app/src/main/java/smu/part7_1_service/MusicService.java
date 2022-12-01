@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 public class MusicService extends Service {
-
     public MusicService() {}
 
     IBinder binder = new MusicServiceBinder();
@@ -35,6 +34,19 @@ public class MusicService extends Service {
     public void onStart(Intent intent, int startId){
         super.onStart(intent, startId);
         Toast.makeText(getApplicationContext(), "서비스 연결", Toast.LENGTH_SHORT).show();
+    }
+    public void onDestroy(){
+        Toast.makeText(getApplicationContext(), "서비스 연결 해제", Toast.LENGTH_SHORT).show();
+        mp.stop();
+        super.onDestroy();
+    }
+    public void play(){
+        Toast.makeText(getApplicationContext(), "사운드 재생", Toast.LENGTH_SHORT).show();
+        mp.start();
+    }
+    public void pause() {
+        Toast.makeText(getApplicationContext(), "사운드 일시정지", Toast.LENGTH_SHORT).show();
+        mp.pause();
     }
 
 
